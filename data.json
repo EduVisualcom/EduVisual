@@ -1,0 +1,147 @@
+[
+  {
+    "id": "kesirler-ve-bolme",
+    "title": "Kesirler ve Bölme",
+    "category": "Matematik",
+    "subcategory": "Kesirler",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "kesir",
+      "bölme"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Kesirler ve bölme konusunu sade biçimde anlatan eğitim görseli.",
+    "file": "kesirler-ve-bolme.svg",
+    "style": "math"
+  },
+  {
+    "id": "butce-ve-tasarruf",
+    "title": "Bütçe ve Tasarruf",
+    "category": "Finans",
+    "subcategory": "Bütçe",
+    "tags": [
+      "finans",
+      "7. sınıf",
+      "bütçe",
+      "tasarruf",
+      "para"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Öğrenciler için bütçe ve tasarruf kavramlarını anlatan görsel.",
+    "file": "butce-ve-tasarruf.svg",
+    "style": "money"
+  },
+  {
+    "id": "bilimsel-deney-sureci",
+    "title": "Bilimsel Deney Süreci",
+    "category": "Fen Bilimleri",
+    "subcategory": "Deney",
+    "tags": [
+      "fen",
+      "deney",
+      "bilim",
+      "süreç"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Bilimsel deney adımlarını görsel olarak destekleyen eğitim materyali.",
+    "file": "bilimsel-deney-sureci.svg",
+    "style": "science"
+  },
+  {
+    "id": "para-yonetimi",
+    "title": "Para Yönetimi",
+    "category": "İnfografik",
+    "subcategory": "Finansal Okuryazarlık",
+    "tags": [
+      "infografik",
+      "finans",
+      "para",
+      "yönetim"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Gençler için sade para yönetimi infografiği.",
+    "file": "para-yonetimi.svg",
+    "style": "chart"
+  },
+  {
+    "id": "ders-notlari-arka-plani",
+    "title": "Ders Notları Arka Planı",
+    "category": "Arka Plan",
+    "subcategory": "Sayfa Dekoru",
+    "tags": [
+      "arka plan",
+      "defter",
+      "eğitim",
+      "sayfa"
+    ],
+    "grade": "Ortaokul",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Eğitim kitabı sayfalarında kullanılabilecek sade dekoratif arka plan.",
+    "file": "ders-notlari-arka-plani.svg",
+    "style": "paper"
+  },
+  {
+    "id": "hedef-ve-planlama",
+    "title": "Hedef ve Planlama",
+    "category": "Etkinlik",
+    "subcategory": "Kişisel Gelişim",
+    "tags": [
+      "etkinlik",
+      "hedef",
+      "planlama",
+      "öğrenci"
+    ],
+    "grade": "Ortaokul",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Öğrenci etkinliklerinde kullanılabilecek hedef belirleme görseli.",
+    "file": "hedef-ve-planlama.svg",
+    "style": "target"
+  },
+  {
+    "id": "geometri-sekilleri",
+    "title": "Geometri Şekilleri",
+    "category": "Matematik",
+    "subcategory": "Geometri",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "geometri",
+      "şekil"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Temel geometri şekillerini destekleyen eğitim görseli.",
+    "file": "geometri-sekilleri.svg",
+    "style": "geo"
+  },
+  {
+    "id": "gelir-ve-gider",
+    "title": "Gelir ve Gider",
+    "category": "Finans",
+    "subcategory": "Bütçe",
+    "tags": [
+      "finans",
+      "gelir",
+      "gider",
+      "bütçe"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Gelir ve gider kavramlarını karşılaştıran basit infografik.",
+    "file": "gelir-ve-gider.svg",
+    "style": "bars"
+  }
+]
