@@ -1,57 +1,436 @@
-let items=[], cats=[
- ["Matematik","∑","Kesirler, geometri"],
- ["Fen Bilimleri","⚗","Deney, bilim"],
- ["Finans","₺","Bütçe, tasarruf"],
- ["İnfografik","◈","Şema, veri, süreç"],
- ["Etkinlik","✦","Çalışma ve oyun"],
- ["Arka Plan","▧","Sayfa dekorları"]
-];
-const grid=document.querySelector("#grid"), count=document.querySelector("#count"), empty=document.querySelector("#empty");
-let activeFilter="";
+let items = [];
 
-function card(x){
- return `<article class="card" onclick="location.href='gorsel-${x.id}.html'">
- <div class="thumb"><img src="assets/previews/${x.file}" alt="${x.title}" loading="lazy"></div>
- <div class="info"><span class="pill">${x.category}</span><h3>${x.title}</h3><p>${x.grade} • ${x.type}</p></div></article>`;
+const cats = [
+  ["Matematik", "∑", "Kesirler, geometri"],
+  ["Fen Bilimleri", "⚗", "Deney, bilim"],
+  ["Finans", "₺", "Bütçe, tasarruf"],
+  ["İnfografik", "◈", "Şema, veri, süreç"],
+  ["Etkinlik", "✦", "Çalışma ve oyun"],
+  ["Arka Plan", "▧", "Sayfa dekorları"]
+];
+
+const grid = document.querySelector("#grid");
+const count = document.querySelector("#count");
+const empty = document.querySelector("#empty");
+
+let activeFilter = "";
+
+
+/* =========================================================
+   GÖRSEL KARTI
+   ========================================================= */
+
+function card(x) {
+  return `
+    <article class="card" onclick="location.href='gorsel-${x.id}.html'">
+
+      <div class="thumb">
+        <img
+          src="assets/previews/${x.file}"
+          alt="${x.title}"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="info">
+
+        <span class="pill">
+          ${x.category || ""}
+        </span>
+
+        <h3>
+          ${x.title || ""}
+        </h3>
+
+        <p>
+          ${x.grade || ""} • ${x.type || ""}
+        </p>
+
+      </div>
+
+    </article>
+  `;
 }
-function render(list){
- grid.innerHTML=list.map(card).join("");
- count.textContent=list.length+" görsel";
- empty.style.display=list.length?"none":"block";
+
+
+/* =========================================================
+   LİSTEYİ EKRANA BAS
+   ========================================================= */
+
+function render(list) {
+
+  grid.innerHTML = list.map(card).join("");
+
+  count.textContent = list.length + " görsel";
+
+  empty.style.display = list.length ? "none" : "block";
 }
-function setActive(label){
- document.querySelectorAll(".cat").forEach(b=>b.classList.toggle("active",b.dataset.category===label));
+
+
+/* =========================================================
+   AKTİF KATEGORİYİ GÖSTER
+   ========================================================= */
+
+function setActive(label) {
+
+  document
+    .querySelectorAll(".cat")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.category === label
+      );
+
+    });
 }
-function search(q){
- q=(q||"").trim().toLocaleLowerCase("tr-TR");
- activeFilter=q;
- setActive(q ? cats.find(c=>c[0].toLocaleLowerCase("tr-TR")===q)?.[0] || "" : "");
- render(q ? items.filter(x=>
-   (x.title+" "+x.category+" "+x.subcategory+" "+x.tags.join(" ")+" "+x.grade+" "+x.desc)
-   .toLocaleLowerCase("tr-TR").includes(q)
- ) : items);
- document.querySelector("#yeniler")?.scrollIntoView({behavior:"smooth"});
+
+
+/* =========================================================
+   ARAMA + KATEGORİ FİLTRELEME
+   ========================================================= */
+
+function search(q) {
+
+  q = (q || "")
+    .trim()
+    .toLocaleLowerCase("tr-TR");
+
+  activeFilter = q;
+
+
+  /* ---------------------------------------------------------
+     ARAMA BOŞSA TÜM GÖRSELLERİ GÖSTER
+     --------------------------------------------------------- */
+
+  if (!q) {
+
+    setActive("");
+
+    render(items);
+
+    return;
+  }
+
+
+  /* ---------------------------------------------------------
+     YAZILAN ŞEY BİR KATEGORİ Mİ?
+     --------------------------------------------------------- */
+
+  const category = cats.find(
+    c =>
+      c[0].toLocaleLowerCase("tr-TR") === q
+  );
+
+
+  /* ---------------------------------------------------------
+     EVET → SADECE O KATEGORİYİ GÖSTER
+     --------------------------------------------------------- */
+
+  if (category) {
+
+    const categoryName = category[0];
+
+    setActive(categoryName);
+
+    const filtered = items.filter(x =>
+
+      (x.category || "")
+        .toLocaleLowerCase("tr-TR") === q
+
+    );
+
+    render(filtered);
+
+    scrollToGallery();
+
+    return;
+  }
+
+
+  /* ---------------------------------------------------------
+     NORMAL ARAMA
+     --------------------------------------------------------- */
+
+  setActive("");
+
+  const filtered = items.filter(x => {
+
+    const searchableText = [
+
+      x.title || "",
+      x.category || "",
+      x.subcategory || "",
+      Array.isArray(x.tags)
+        ? x.tags.join(" ")
+        : "",
+      x.grade || "",
+      x.type || "",
+      x.desc || ""
+
+    ]
+      .join(" ")
+      .toLocaleLowerCase("tr-TR");
+
+    return searchableText.includes(q);
+
+  });
+
+  render(filtered);
+
+  scrollToGallery();
 }
-function categoryClick(label){
- const normalized=label.toLocaleLowerCase("tr-TR");
- const same=activeFilter===normalized;
- const q=same?"":label;
- document.querySelector("#q").value=q;
- search(q);
+
+
+/* =========================================================
+   KATEGORİYE TIKLAMA
+   ========================================================= */
+
+function categoryClick(label) {
+
+  const normalized =
+    label.toLocaleLowerCase("tr-TR");
+
+
+  /* ---------------------------------------------------------
+     AYNI KATEGORİYE TEKRAR BASILIRSA
+     FİLTREYİ KALDIR
+     --------------------------------------------------------- */
+
+  if (activeFilter === normalized) {
+
+    clearFilter();
+
+    return;
+  }
+
+
+  /* ---------------------------------------------------------
+     ARAMA KUTUSUNA KATEGORİ ADINI YAZ
+     --------------------------------------------------------- */
+
+  const input = document.querySelector("#q");
+
+  if (input) {
+    input.value = label;
+  }
+
+
+  /* ---------------------------------------------------------
+     KATEGORİ FİLTRESİNİ ÇALIŞTIR
+     --------------------------------------------------------- */
+
+  search(label);
 }
-function clearFilter(){
- document.querySelector("#q").value="";
- search("");
+
+
+/* =========================================================
+   FİLTREYİ TEMİZLE
+   ========================================================= */
+
+function clearFilter() {
+
+  const input = document.querySelector("#q");
+
+  if (input) {
+    input.value = "";
+  }
+
+  activeFilter = "";
+
+  setActive("");
+
+  render(items);
 }
-fetch("data.json").then(r=>r.json()).then(d=>{
- items=d; render(items);
- document.querySelector("#cats").innerHTML=cats.map(c=>
-  `<button class="cat" data-category="${c[0]}" onclick="categoryClick('${c[0]}')">
-   <b>${c[1]}</b><strong>${c[0]}</strong><span>${c[2]}</span>
-  </button>`).join("");
- document.querySelector("#chips").innerHTML=
-  cats.slice(0,4).map(c=>`<button onclick="categoryClick('${c[0]}')">${c[0]}</button>`).join("")+
-  `<button onclick="clearFilter()">Tümünü göster</button>`;
-});
-document.querySelector("#go").onclick=()=>search(document.querySelector("#q").value);
-document.querySelector("#q").onkeydown=e=>{if(e.key==="Enter")search(e.target.value)};
+
+
+/* =========================================================
+   GÖRSEL KOLEKSİYONUNA KAYDIR
+   ========================================================= */
+
+function scrollToGallery() {
+
+  const gallery =
+    document.querySelector("#yeniler");
+
+  if (!gallery) {
+    return;
+  }
+
+  setTimeout(() => {
+
+    gallery.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  }, 50);
+}
+
+
+/* =========================================================
+   KATEGORİLERİ OLUŞTUR
+   ========================================================= */
+
+function buildCategories() {
+
+  const catsContainer =
+    document.querySelector("#cats");
+
+  if (catsContainer) {
+
+    catsContainer.innerHTML =
+      cats.map(c => {
+
+        return `
+          <button
+            class="cat"
+            data-category="${c[0]}"
+            onclick="categoryClick('${c[0]}')"
+          >
+
+            <b>${c[1]}</b>
+
+            <strong>
+              ${c[0]}
+            </strong>
+
+            <span>
+              ${c[2]}
+            </span>
+
+          </button>
+        `;
+
+      }).join("");
+
+  }
+
+
+  /* ---------------------------------------------------------
+     ÜST ARAMA ÇİPLERİ
+     --------------------------------------------------------- */
+
+  const chips =
+    document.querySelector("#chips");
+
+  if (chips) {
+
+    chips.innerHTML =
+
+      cats
+        .slice(0, 4)
+        .map(c => {
+
+          return `
+            <button
+              onclick="categoryClick('${c[0]}')"
+            >
+              ${c[0]}
+            </button>
+          `;
+
+        })
+        .join("")
+
+      +
+
+      `
+        <button onclick="clearFilter()">
+          Tümünü göster
+        </button>
+      `;
+
+  }
+}
+
+
+/* =========================================================
+   VERİLERİ YÜKLE
+   ========================================================= */
+
+fetch("data.json")
+
+  .then(response => {
+
+    if (!response.ok) {
+      throw new Error(
+        "data.json yüklenemedi."
+      );
+    }
+
+    return response.json();
+
+  })
+
+  .then(data => {
+
+    items = Array.isArray(data)
+      ? data
+      : [];
+
+    render(items);
+
+    buildCategories();
+
+  })
+
+  .catch(error => {
+
+    console.error(
+      "EduVisual veri yükleme hatası:",
+      error
+    );
+
+    items = [];
+
+    render(items);
+
+  });
+
+
+/* =========================================================
+   ARAMA BUTONU
+   ========================================================= */
+
+const goButton =
+  document.querySelector("#go");
+
+if (goButton) {
+
+  goButton.onclick = () => {
+
+    const input =
+      document.querySelector("#q");
+
+    search(
+      input ? input.value : ""
+    );
+
+  };
+
+}
+
+
+/* =========================================================
+   ENTER İLE ARAMA
+   ========================================================= */
+
+const searchInput =
+  document.querySelector("#q");
+
+if (searchInput) {
+
+  searchInput.onkeydown = event => {
+
+    if (event.key === "Enter") {
+
+      search(
+        event.target.value
+      );
+
+    }
+
+  };
+
+}
