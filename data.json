@@ -67,12 +67,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    if (!searchInput) {
-        console.error("EduVisual: #q arama alanı bulunamadı.");
-    }
-
     // =========================================================
-    // METİN TEMİZLEME
+    // METİN NORMALİZASYONU
     // =========================================================
 
     function normalize(text) {
@@ -88,7 +84,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function createCard(item) {
 
         return `
-            <article class="card" data-id="${item.id}">
+            <article
+                class="card"
+                data-id="${item.id}"
+                role="button"
+                tabindex="0"
+            >
 
                 <div class="thumb">
                     <img
@@ -124,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function render(list) {
 
-        if (!list || list.length === 0) {
+        if (!Array.isArray(list) || list.length === 0) {
 
             grid.innerHTML = "";
 
@@ -139,7 +140,9 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        grid.innerHTML = list.map(createCard).join("");
+        grid.innerHTML = list
+            .map(createCard)
+            .join("");
 
         if (count) {
             count.textContent = list.length + " görsel";
@@ -148,6 +151,30 @@ document.addEventListener("DOMContentLoaded", function () {
         if (empty) {
             empty.style.display = "none";
         }
+    }
+
+    // =========================================================
+    // SONUÇLARA KAYDIR
+    // =========================================================
+
+    function scrollToResults() {
+
+        const target =
+            document.querySelector("#yeniler") ||
+            grid;
+
+        if (!target) {
+            return;
+        }
+
+        setTimeout(function () {
+
+            target.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }, 50);
     }
 
     // =========================================================
@@ -160,7 +187,8 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const buttons = categoriesBox.querySelectorAll(".cat");
+        const buttons =
+            categoriesBox.querySelectorAll(".cat");
 
         buttons.forEach(function (button) {
 
@@ -169,7 +197,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             button.classList.toggle(
                 "active",
-                normalize(buttonCategory) === normalize(categoryName)
+                normalize(buttonCategory) ===
+                normalize(categoryName)
             );
 
         });
@@ -195,8 +224,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         data-category="${category.name}"
                     >
                         <b>${category.icon}</b>
-                        <strong>${category.name}</strong>
-                        <span>${category.desc}</span>
+
+                        <strong>
+                            ${category.name}
+                        </strong>
+
+                        <span>
+                            ${category.desc}
+                        </span>
                     </button>
                 `;
 
@@ -244,14 +279,67 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =========================================================
-    // ARAMA
+    // KATEGORİ FİLTRESİ
+    // =========================================================
+
+    function filterByCategory(categoryName) {
+
+        if (!categoryName) {
+            return;
+        }
+
+        activeCategory = categoryName;
+
+        // ÖNEMLİ:
+        // Kategori adına tıklayınca arama kutusuna
+        // kategori adı YAZILMIYOR.
+
+        if (searchInput) {
+            searchInput.value = "";
+        }
+
+        setActiveCategory(categoryName);
+
+        const filtered = items.filter(function (item) {
+
+            return normalize(item.category) ===
+                normalize(categoryName);
+
+        });
+
+        render(filtered);
+
+        // Sonuçları otomatik olarak göster
+        scrollToResults();
+    }
+
+    // =========================================================
+    // TÜM GÖRSELLER
+    // =========================================================
+
+    function showAll() {
+
+        activeCategory = "";
+
+        if (searchInput) {
+            searchInput.value = "";
+        }
+
+        setActiveCategory("");
+
+        render(items);
+
+        scrollToResults();
+    }
+
+    // =========================================================
+    // NORMAL ARAMA
     // =========================================================
 
     function search(query) {
 
         const q = normalize(query);
 
-        // Arama kutusunu güncelle
         if (searchInput) {
             searchInput.value = query || "";
         }
@@ -268,37 +356,40 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Önce kategori kontrolü
-        const matchedCategory = categories.find(function (category) {
+        // =====================================================
+        // ÖNCE KATEGORİ KONTROLÜ
+        // =====================================================
 
-            return normalize(category.name) === q;
+        const matchedCategory =
+            categories.find(function (category) {
 
-        });
-
-        if (matchedCategory) {
-
-            activeCategory = matchedCategory.name;
-
-            setActiveCategory(matchedCategory.name);
-
-            const filtered = items.filter(function (item) {
-
-                return normalize(item.category) ===
-                    normalize(matchedCategory.name);
+                return normalize(category.name) === q;
 
             });
 
-            render(filtered);
+        if (matchedCategory) {
+
+            filterByCategory(
+                matchedCategory.name
+            );
 
             return;
         }
 
-        // Normal metin araması
+        // =====================================================
+        // NORMAL METİN ARAMASI
+        // =====================================================
+
         activeCategory = "";
 
         setActiveCategory("");
 
         const filtered = items.filter(function (item) {
+
+            const tags =
+                Array.isArray(item.tags)
+                    ? item.tags
+                    : [];
 
             const searchableText = [
                 item.title,
@@ -307,58 +398,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 item.grade,
                 item.type,
                 item.desc,
-                ...(Array.isArray(item.tags) ? item.tags : [])
+                ...tags
             ]
+                .filter(Boolean)
                 .join(" ")
                 .toLocaleLowerCase("tr-TR");
 
             return searchableText.includes(q);
-        });
-
-        render(filtered);
-    }
-
-    // =========================================================
-    // KATEGORİ TIKLAMA
-    // =========================================================
-
-    function selectCategory(categoryName) {
-
-        const isSame =
-            normalize(activeCategory) === normalize(categoryName);
-
-        // Aynı kategoriye tekrar basılırsa tümünü göster
-        if (isSame) {
-
-            activeCategory = "";
-
-            if (searchInput) {
-                searchInput.value = "";
-            }
-
-            setActiveCategory("");
-
-            render(items);
-
-            return;
-        }
-
-        activeCategory = categoryName;
-
-        if (searchInput) {
-            searchInput.value = categoryName;
-        }
-
-        setActiveCategory(categoryName);
-
-        const filtered = items.filter(function (item) {
-
-            return normalize(item.category) ===
-                normalize(categoryName);
 
         });
 
         render(filtered);
+
+        scrollToResults();
     }
 
     // =========================================================
@@ -367,23 +419,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (categoriesBox) {
 
-        categoriesBox.addEventListener("click", function (event) {
+        categoriesBox.addEventListener(
+            "click",
+            function (event) {
 
-            const button = event.target.closest(".cat");
+                const button =
+                    event.target.closest(".cat");
 
-            if (!button) {
-                return;
+                if (!button) {
+                    return;
+                }
+
+                const categoryName =
+                    button.getAttribute(
+                        "data-category"
+                    );
+
+                if (!categoryName) {
+                    return;
+                }
+
+                // Aynı kategoriye tekrar basılırsa
+                // tüm görselleri göster
+                if (
+                    normalize(activeCategory) ===
+                    normalize(categoryName)
+                ) {
+
+                    showAll();
+
+                    return;
+                }
+
+                filterByCategory(categoryName);
             }
-
-            const categoryName =
-                button.getAttribute("data-category");
-
-            if (!categoryName) {
-                return;
-            }
-
-            selectCategory(categoryName);
-        });
+        );
     }
 
     // =========================================================
@@ -392,37 +462,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (chipsBox) {
 
-        chipsBox.addEventListener("click", function (event) {
+        chipsBox.addEventListener(
+            "click",
+            function (event) {
 
-            const categoryButton =
-                event.target.closest("[data-chip-category]");
+                const categoryButton =
+                    event.target.closest(
+                        "[data-chip-category]"
+                    );
 
-            if (categoryButton) {
+                if (categoryButton) {
 
-                const categoryName =
-                    categoryButton.getAttribute("data-chip-category");
+                    const categoryName =
+                        categoryButton.getAttribute(
+                            "data-chip-category"
+                        );
 
-                selectCategory(categoryName);
+                    if (categoryName) {
+                        filterByCategory(
+                            categoryName
+                        );
+                    }
 
-                return;
-            }
-
-            const clearButton =
-                event.target.closest("[data-clear-filter]");
-
-            if (clearButton) {
-
-                activeCategory = "";
-
-                if (searchInput) {
-                    searchInput.value = "";
+                    return;
                 }
 
-                setActiveCategory("");
+                const clearButton =
+                    event.target.closest(
+                        "[data-clear-filter]"
+                    );
 
-                render(items);
+                if (clearButton) {
+                    showAll();
+                }
             }
-        });
+        );
     }
 
     // =========================================================
@@ -431,14 +505,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (searchButton) {
 
-        searchButton.addEventListener("click", function () {
+        searchButton.addEventListener(
+            "click",
+            function () {
 
-            if (!searchInput) {
-                return;
+                if (!searchInput) {
+                    return;
+                }
+
+                search(searchInput.value);
             }
-
-            search(searchInput.value);
-        });
+        );
     }
 
     // =========================================================
@@ -447,37 +524,84 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (searchInput) {
 
-        searchInput.addEventListener("keydown", function (event) {
+        searchInput.addEventListener(
+            "keydown",
+            function (event) {
 
-            if (event.key === "Enter") {
+                if (event.key === "Enter") {
 
-                event.preventDefault();
+                    event.preventDefault();
 
-                search(searchInput.value);
+                    search(
+                        searchInput.value
+                    );
+                }
             }
-        });
+        );
     }
 
     // =========================================================
     // GÖRSEL KARTINA TIKLAMA
     // =========================================================
 
-    grid.addEventListener("click", function (event) {
+    grid.addEventListener(
+        "click",
+        function (event) {
 
-        const card = event.target.closest(".card");
+            const card =
+                event.target.closest(".card");
 
-        if (!card) {
-            return;
+            if (!card) {
+                return;
+            }
+
+            const id =
+                card.getAttribute("data-id");
+
+            if (!id) {
+                return;
+            }
+
+            window.location.href =
+                "gorsel-" + id + ".html";
         }
+    );
 
-        const id = card.getAttribute("data-id");
+    // =========================================================
+    // KLAVYE İLE GÖRSEL KARTI
+    // =========================================================
 
-        if (!id) {
-            return;
+    grid.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key !== "Enter" &&
+                event.key !== " "
+            ) {
+                return;
+            }
+
+            const card =
+                event.target.closest(".card");
+
+            if (!card) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const id =
+                card.getAttribute("data-id");
+
+            if (!id) {
+                return;
+            }
+
+            window.location.href =
+                "gorsel-" + id + ".html";
         }
-
-        window.location.href = "gorsel-" + id + ".html";
-    });
+    );
 
     // =========================================================
     // DATA.JSON YÜKLE
@@ -488,6 +612,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(function (response) {
 
             if (!response.ok) {
+
                 throw new Error(
                     "data.json yüklenemedi. HTTP " +
                     response.status
@@ -509,7 +634,9 @@ document.addEventListener("DOMContentLoaded", function () {
             items = data;
 
             renderCategories();
+
             renderChips();
+
             render(items);
 
             console.log(
@@ -534,12 +661,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 ">
                     Görseller yüklenemedi.
                     <br>
-                    <small>${error.message}</small>
+                    <small>
+                        ${error.message}
+                    </small>
                 </div>
             `;
 
             if (count) {
-                count.textContent = "Veri yüklenemedi";
+                count.textContent =
+                    "Veri yüklenemedi";
             }
         });
 
