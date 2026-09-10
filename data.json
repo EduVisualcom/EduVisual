@@ -1,676 +1,106 @@
-document.addEventListener("DOMContentLoaded", function () {
-
-    // =========================================================
-    // EDUVISUAL - ANA UYGULAMA
-    // =========================================================
-
-    let items = [];
-    let activeCategory = "";
-
-    // =========================================================
-    // KATEGORİLER
-    // =========================================================
-
-    const categories = [
-        {
-            name: "Matematik",
-            icon: "∑",
-            desc: "Kesirler, geometri"
-        },
-        {
-            name: "Fen Bilimleri",
-            icon: "⚗",
-            desc: "Deney, bilim"
-        },
-        {
-            name: "Finans",
-            icon: "₺",
-            desc: "Bütçe, tasarruf"
-        },
-        {
-            name: "İnfografik",
-            icon: "◈",
-            desc: "Şema, veri, süreç"
-        },
-        {
-            name: "Etkinlik",
-            icon: "✦",
-            desc: "Çalışma ve oyun"
-        },
-        {
-            name: "Arka Plan",
-            icon: "▧",
-            desc: "Sayfa dekorları"
-        }
-    ];
-
-    // =========================================================
-    // HTML ELEMANLARI
-    // =========================================================
-
-    const grid = document.querySelector("#grid");
-    const count = document.querySelector("#count");
-    const empty = document.querySelector("#empty");
-
-    const categoriesBox = document.querySelector("#cats");
-    const chipsBox = document.querySelector("#chips");
-
-    const searchInput = document.querySelector("#q");
-    const searchButton = document.querySelector("#go");
-
-    // =========================================================
-    // KONTROL
-    // =========================================================
-
-    if (!grid) {
-        console.error("EduVisual: #grid bulunamadı.");
-        return;
-    }
-
-    // =========================================================
-    // METİN NORMALİZASYONU
-    // =========================================================
-
-    function normalize(text) {
-        return String(text || "")
-            .toLocaleLowerCase("tr-TR")
-            .trim();
-    }
-
-    // =========================================================
-    // GÖRSEL KARTI
-    // =========================================================
-
-    function createCard(item) {
-
-        return `
-            <article
-                class="card"
-                data-id="${item.id}"
-                role="button"
-                tabindex="0"
-            >
-
-                <div class="thumb">
-                    <img
-                        src="assets/previews/${item.file}"
-                        alt="${item.title || ""}"
-                        loading="lazy"
-                    >
-                </div>
-
-                <div class="info">
-
-                    <span class="pill">
-                        ${item.category || ""}
-                    </span>
-
-                    <h3>
-                        ${item.title || ""}
-                    </h3>
-
-                    <p>
-                        ${item.grade || ""} • ${item.type || ""}
-                    </p>
-
-                </div>
-
-            </article>
-        `;
-    }
-
-    // =========================================================
-    // LİSTEYİ GÖSTER
-    // =========================================================
-
-    function render(list) {
-
-        if (!Array.isArray(list) || list.length === 0) {
-
-            grid.innerHTML = "";
-
-            if (count) {
-                count.textContent = "0 görsel";
-            }
-
-            if (empty) {
-                empty.style.display = "block";
-            }
-
-            return;
-        }
-
-        grid.innerHTML = list
-            .map(createCard)
-            .join("");
-
-        if (count) {
-            count.textContent = list.length + " görsel";
-        }
-
-        if (empty) {
-            empty.style.display = "none";
-        }
-    }
-
-    // =========================================================
-    // SONUÇLARA KAYDIR
-    // =========================================================
-
-    function scrollToResults() {
-
-        const target =
-            document.querySelector("#yeniler") ||
-            grid;
-
-        if (!target) {
-            return;
-        }
-
-        setTimeout(function () {
-
-            target.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-        }, 50);
-    }
-
-    // =========================================================
-    // AKTİF KATEGORİ
-    // =========================================================
-
-    function setActiveCategory(categoryName) {
-
-        if (!categoriesBox) {
-            return;
-        }
-
-        const buttons =
-            categoriesBox.querySelectorAll(".cat");
-
-        buttons.forEach(function (button) {
-
-            const buttonCategory =
-                button.getAttribute("data-category") || "";
-
-            button.classList.toggle(
-                "active",
-                normalize(buttonCategory) ===
-                normalize(categoryName)
-            );
-
-        });
-    }
-
-    // =========================================================
-    // KATEGORİLERİ OLUŞTUR
-    // =========================================================
-
-    function renderCategories() {
-
-        if (!categoriesBox) {
-            return;
-        }
-
-        categoriesBox.innerHTML = categories
-            .map(function (category) {
-
-                return `
-                    <button
-                        type="button"
-                        class="cat"
-                        data-category="${category.name}"
-                    >
-                        <b>${category.icon}</b>
-
-                        <strong>
-                            ${category.name}
-                        </strong>
-
-                        <span>
-                            ${category.desc}
-                        </span>
-                    </button>
-                `;
-
-            })
-            .join("");
-    }
-
-    // =========================================================
-    // HIZLI FİLTRE BUTONLARI
-    // =========================================================
-
-    function renderChips() {
-
-        if (!chipsBox) {
-            return;
-        }
-
-        let html = "";
-
-        categories.slice(0, 4).forEach(function (category) {
-
-            html += `
-                <button
-                    type="button"
-                    class="chip"
-                    data-chip-category="${category.name}"
-                >
-                    ${category.name}
-                </button>
-            `;
-
-        });
-
-        html += `
-            <button
-                type="button"
-                class="chip"
-                data-clear-filter
-            >
-                Tümünü göster
-            </button>
-        `;
-
-        chipsBox.innerHTML = html;
-    }
-
-    // =========================================================
-    // KATEGORİ FİLTRESİ
-    // =========================================================
-
-    function filterByCategory(categoryName) {
-
-        if (!categoryName) {
-            return;
-        }
-
-        activeCategory = categoryName;
-
-        // ÖNEMLİ:
-        // Kategori adına tıklayınca arama kutusuna
-        // kategori adı YAZILMIYOR.
-
-        if (searchInput) {
-            searchInput.value = "";
-        }
-
-        setActiveCategory(categoryName);
-
-        const filtered = items.filter(function (item) {
-
-            return normalize(item.category) ===
-                normalize(categoryName);
-
-        });
-
-        render(filtered);
-
-        // Sonuçları otomatik olarak göster
-        scrollToResults();
-    }
-
-    // =========================================================
-    // TÜM GÖRSELLER
-    // =========================================================
-
-    function showAll() {
-
-        activeCategory = "";
-
-        if (searchInput) {
-            searchInput.value = "";
-        }
-
-        setActiveCategory("");
-
-        render(items);
-
-        scrollToResults();
-    }
-
-    // =========================================================
-    // NORMAL ARAMA
-    // =========================================================
-
-    function search(query) {
-
-        const q = normalize(query);
-
-        if (searchInput) {
-            searchInput.value = query || "";
-        }
-
-        // Boş arama
-        if (!q) {
-
-            activeCategory = "";
-
-            setActiveCategory("");
-
-            render(items);
-
-            return;
-        }
-
-        // =====================================================
-        // ÖNCE KATEGORİ KONTROLÜ
-        // =====================================================
-
-        const matchedCategory =
-            categories.find(function (category) {
-
-                return normalize(category.name) === q;
-
-            });
-
-        if (matchedCategory) {
-
-            filterByCategory(
-                matchedCategory.name
-            );
-
-            return;
-        }
-
-        // =====================================================
-        // NORMAL METİN ARAMASI
-        // =====================================================
-
-        activeCategory = "";
-
-        setActiveCategory("");
-
-        const filtered = items.filter(function (item) {
-
-            const tags =
-                Array.isArray(item.tags)
-                    ? item.tags
-                    : [];
-
-            const searchableText = [
-                item.title,
-                item.category,
-                item.subcategory,
-                item.grade,
-                item.type,
-                item.desc,
-                ...tags
-            ]
-                .filter(Boolean)
-                .join(" ")
-                .toLocaleLowerCase("tr-TR");
-
-            return searchableText.includes(q);
-
-        });
-
-        render(filtered);
-
-        scrollToResults();
-    }
-
-    // =========================================================
-    // KATEGORİ TIKLAMALARI
-    // =========================================================
-
-    if (categoriesBox) {
-
-        categoriesBox.addEventListener(
-            "click",
-            function (event) {
-
-                const button =
-                    event.target.closest(".cat");
-
-                if (!button) {
-                    return;
-                }
-
-                const categoryName =
-                    button.getAttribute(
-                        "data-category"
-                    );
-
-                if (!categoryName) {
-                    return;
-                }
-
-                // Aynı kategoriye tekrar basılırsa
-                // tüm görselleri göster
-                if (
-                    normalize(activeCategory) ===
-                    normalize(categoryName)
-                ) {
-
-                    showAll();
-
-                    return;
-                }
-
-                filterByCategory(categoryName);
-            }
-        );
-    }
-
-    // =========================================================
-    // CHIP TIKLAMALARI
-    // =========================================================
-
-    if (chipsBox) {
-
-        chipsBox.addEventListener(
-            "click",
-            function (event) {
-
-                const categoryButton =
-                    event.target.closest(
-                        "[data-chip-category]"
-                    );
-
-                if (categoryButton) {
-
-                    const categoryName =
-                        categoryButton.getAttribute(
-                            "data-chip-category"
-                        );
-
-                    if (categoryName) {
-                        filterByCategory(
-                            categoryName
-                        );
-                    }
-
-                    return;
-                }
-
-                const clearButton =
-                    event.target.closest(
-                        "[data-clear-filter]"
-                    );
-
-                if (clearButton) {
-                    showAll();
-                }
-            }
-        );
-    }
-
-    // =========================================================
-    // ARAMA BUTONU
-    // =========================================================
-
-    if (searchButton) {
-
-        searchButton.addEventListener(
-            "click",
-            function () {
-
-                if (!searchInput) {
-                    return;
-                }
-
-                search(searchInput.value);
-            }
-        );
-    }
-
-    // =========================================================
-    // ENTER İLE ARAMA
-    // =========================================================
-
-    if (searchInput) {
-
-        searchInput.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (event.key === "Enter") {
-
-                    event.preventDefault();
-
-                    search(
-                        searchInput.value
-                    );
-                }
-            }
-        );
-    }
-
-    // =========================================================
-    // GÖRSEL KARTINA TIKLAMA
-    // =========================================================
-
-    grid.addEventListener(
-        "click",
-        function (event) {
-
-            const card =
-                event.target.closest(".card");
-
-            if (!card) {
-                return;
-            }
-
-            const id =
-                card.getAttribute("data-id");
-
-            if (!id) {
-                return;
-            }
-
-            window.location.href =
-                "gorsel-" + id + ".html";
-        }
-    );
-
-    // =========================================================
-    // KLAVYE İLE GÖRSEL KARTI
-    // =========================================================
-
-    grid.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key !== "Enter" &&
-                event.key !== " "
-            ) {
-                return;
-            }
-
-            const card =
-                event.target.closest(".card");
-
-            if (!card) {
-                return;
-            }
-
-            event.preventDefault();
-
-            const id =
-                card.getAttribute("data-id");
-
-            if (!id) {
-                return;
-            }
-
-            window.location.href =
-                "gorsel-" + id + ".html";
-        }
-    );
-
-    // =========================================================
-    // DATA.JSON YÜKLE
-    // =========================================================
-
-    fetch("data.json")
-
-        .then(function (response) {
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "data.json yüklenemedi. HTTP " +
-                    response.status
-                );
-            }
-
-            return response.json();
-        })
-
-        .then(function (data) {
-
-            if (!Array.isArray(data)) {
-
-                throw new Error(
-                    "data.json bir JSON dizisi olmalı."
-                );
-            }
-
-            items = data;
-
-            renderCategories();
-
-            renderChips();
-
-            render(items);
-
-            console.log(
-                "EduVisual hazır:",
-                items.length,
-                "görsel yüklendi."
-            );
-        })
-
-        .catch(function (error) {
-
-            console.error(
-                "EduVisual veri hatası:",
-                error
-            );
-
-            grid.innerHTML = `
-                <div style="
-                    padding:30px;
-                    text-align:center;
-                    color:#777;
-                ">
-                    Görseller yüklenemedi.
-                    <br>
-                    <small>
-                        ${error.message}
-                    </small>
-                </div>
-            `;
-
-            if (count) {
-                count.textContent =
-                    "Veri yüklenemedi";
-            }
-        });
-
-});
+[
+  {
+    "id": "kesirler-ve-bolme",
+    "title": "Kesirler ve Bölme",
+    "category": "Matematik",
+    "subcategory": "Kesirler",
+    "tags": ["matematik", "7. sınıf", "kesir", "bölme"],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Kesirler ve bölme konusunu sade biçimde anlatan eğitim görseli.",
+    "file": "kesirler-ve-bolme.svg",
+    "style": "math"
+  },
+  {
+    "id": "butce-ve-tasarruf",
+    "title": "Bütçe ve Tasarruf",
+    "category": "Finans",
+    "subcategory": "Bütçe",
+    "tags": ["finans", "7. sınıf", "bütçe", "tasarruf", "para"],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Öğrenciler için bütçe ve tasarruf kavramlarını anlatan görsel.",
+    "file": "butce-ve-tasarruf.svg",
+    "style": "money"
+  },
+  {
+    "id": "bilimsel-deney-sureci",
+    "title": "Bilimsel Deney Süreci",
+    "category": "Fen Bilimleri",
+    "subcategory": "Deney",
+    "tags": ["fen", "deney", "bilim", "süreç"],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Bilimsel deney adımlarını görsel olarak destekleyen eğitim materyali.",
+    "file": "bilimsel-deney-sureci.svg",
+    "style": "science"
+  },
+  {
+    "id": "para-yonetimi",
+    "title": "Para Yönetimi",
+    "category": "İnfografik",
+    "subcategory": "Finansal Okuryazarlık",
+    "tags": ["infografik", "finans", "para", "yönetim"],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Gençler için sade para yönetimi infografiği.",
+    "file": "para-yonetimi.svg",
+    "style": "chart"
+  },
+  {
+    "id": "ders-notlari-arka-plani",
+    "title": "Ders Notları Arka Planı",
+    "category": "Arka Plan",
+    "subcategory": "Sayfa Dekoru",
+    "tags": ["arka plan", "defter", "eğitim", "sayfa"],
+    "grade": "Ortaokul",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Eğitim kitabı sayfalarında kullanılabilecek sade dekoratif arka plan.",
+    "file": "ders-notlari-arka-plani.svg",
+    "style": "paper"
+  },
+  {
+    "id": "hedef-ve-planlama",
+    "title": "Hedef ve Planlama",
+    "category": "Etkinlik",
+    "subcategory": "Kişisel Gelişim",
+    "tags": ["etkinlik", "hedef", "planlama", "öğrenci"],
+    "grade": "Ortaokul",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Öğrenci etkinliklerinde kullanılabilecek hedef belirleme görseli.",
+    "file": "hedef-ve-planlama.svg",
+    "style": "target"
+  },
+  {
+    "id": "geometri-sekilleri",
+    "title": "Geometri Şekilleri",
+    "category": "Matematik",
+    "subcategory": "Geometri",
+    "tags": ["matematik", "7. sınıf", "geometri", "şekil"],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Temel geometri şekillerini destekleyen eğitim görseli.",
+    "file": "geometri-sekilleri.svg",
+    "style": "geo"
+  },
+  {
+    "id": "gelir-ve-gider",
+    "title": "Gelir ve Gider",
+    "category": "Finans",
+    "subcategory": "Bütçe",
+    "tags": ["finans", "gelir", "gider", "bütçe"],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "300 × 205 px",
+    "desc": "Gelir ve gider kavramlarını karşılaştıran basit infografik.",
+    "file": "gelir-ve-gider.svg",
+    "style": "bars"
+  }
+]
