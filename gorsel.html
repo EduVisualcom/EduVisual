@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>EduVisual - Görsel</title>
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+    <style>
+
+        .detail-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        .detail-back {
+            display: inline-block;
+            margin-bottom: 25px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .detail-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
+            gap: 40px;
+            align-items: start;
+        }
+
+        .detail-preview {
+            background: #f5f5f5;
+            border-radius: 18px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .detail-preview img {
+            display: block;
+            width: 100%;
+            max-height: 700px;
+            object-fit: contain;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+
+        .detail-info {
+            padding: 10px 0;
+        }
+
+        .detail-category {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #eef4ff;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .detail-title {
+            font-size: 32px;
+            line-height: 1.2;
+            margin: 0 0 15px;
+        }
+
+        .detail-meta {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .detail-description {
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 25px;
+        }
+
+        .detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .detail-tag {
+            background: #f1f1f1;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+        }
+
+        .download-button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px 20px;
+            border-radius: 12px;
+            background: #111;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .secondary-button {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 20px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            color: #222;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .not-found {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        @media (max-width: 800px) {
+
+            .detail-page {
+                padding: 25px 15px 60px;
+            }
+
+            .detail-layout {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .detail-title {
+                font-size: 26px;
+            }
+
+            .detail-preview {
+                padding: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header class="site-header">
+
+        <div class="container">
+
+            <a
+                href="index.html"
+                class="logo"
+            >
+                EduVisual
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <main class="detail-page">
+
+        <a
+            href="javascript:history.back()"
+            class="detail-back"
+        >
+            ← Geri dön
+        </a>
+
+
+        <div
+            id="loading"
+            style="text-align:center;padding:50px;"
+        >
+            Görsel yükleniyor...
+        </div>
+
+
+        <div
+            id="content"
+            style="display:none;"
+        >
+
+            <div class="detail-layout">
+
+
+                <!-- GÖRSEL -->
+
+                <div class="detail-preview">
+
+                    <img
+                        id="visualImage"
+                        src=""
+                        alt=""
+                    >
+
+                </div>
+
+
+                <!-- BİLGİLER -->
+
+                <div class="detail-info">
+
+                    <span
+                        id="visualCategory"
+                        class="detail-category"
+                    >
+                    </span>
+
+
+                    <h1
+                        id="visualTitle"
+                        class="detail-title"
+                    >
+                    </h1>
+
+
+                    <div
+                        id="visualMeta"
+                        class="detail-meta"
+                    >
+                    </div>
+
+
+                    <div
+                        id="visualDescription"
+                        class="detail-description"
+                    >
+                    </div>
+
+
+                    <div
+                        id="visualTags"
+                        class="detail-tags"
+                    >
+                    </div>
+
+
+                    <a
+                        id="downloadButton"
+                        class="download-button"
+                        href=""
+                        download
+                    >
+                        ↓ Görseli İndir
+                    </a>
+
+
+                    <a
+                        id="categoryButton"
+                        class="secondary-button"
+                        href=""
+                    >
+                        ← Kategoriye Dön
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="notFound"
+            class="not-found"
+            style="display:none;"
+        >
+
+            <h2>
+                Görsel bulunamadı
+            </h2>
+
+            <p>
+                Aradığınız görsel mevcut değil.
+            </p>
+
+            <br>
+
+            <a href="index.html">
+                Ana sayfaya dön
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const params =
+                    new URLSearchParams(
+                        window.location.search
+                    );
+
+                const id =
+                    params.get("id");
+
+
+                const loading =
+                    document.querySelector(
+                        "#loading"
+                    );
+
+                const content =
+                    document.querySelector(
+                        "#content"
+                    );
+
+                const notFound =
+                    document.querySelector(
+                        "#notFound"
+                    );
+
+
+                if (!id) {
+
+                    loading.style.display =
+                        "none";
+
+                    notFound.style.display =
+                        "block";
+
+                    return;
+
+                }
+
+
+                fetch("data.json")
+
+                    .then(function (response) {
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                "data.json yüklenemedi."
+                            );
+
+                        }
+
+                        return response.json();
+
+                    })
+
+
+                    .then(function (items) {
+
+                        const item =
+                            items.find(
+                                function (visual) {
+
+                                    return String(
+                                        visual.id
+                                    ) === String(id);
+
+                                }
+                            );
+
+
+                        if (!item) {
+
+                            loading.style.display =
+                                "none";
+
+                            notFound.style.display =
+                                "block";
+
+                            return;
+
+                        }
+
+
+                        // ---------------------------------
+                        // SAYFA BAŞLIĞI
+                        // ---------------------------------
+
+                        document.title =
+                            "EduVisual - " +
+                            (item.title || "Görsel");
+
+
+                        // ---------------------------------
+                        // GÖRSEL
+                        // ---------------------------------
+
+                        const image =
+                            document.querySelector(
+                                "#visualImage"
+                            );
+
+                        image.src =
+                            "assets/previews/" +
+                            item.file;
+
+                        image.alt =
+                            item.title || "";
+
+
+                        // ---------------------------------
+                        // BİLGİLER
+                        // ---------------------------------
+
+                        document.querySelector(
+                            "#visualCategory"
+                        ).textContent =
+                            item.category || "";
+
+
+                        document.querySelector(
+                            "#visualTitle"
+                        ).textContent =
+                            item.title ||
+                            "İsimsiz görsel";
+
+
+                        document.querySelector(
+                            "#visualMeta"
+                        ).textContent =
+                            [
+                                item.grade || "",
+                                item.type || ""
+                            ]
+                            .filter(Boolean)
+                            .join(" • ");
+
+
+                        document.querySelector(
+                            "#visualDescription"
+                        ).textContent =
+                            item.desc ||
+                            "EduVisual ücretsiz eğitim görseli.";
+
+
+                        // ---------------------------------
+                        // ETİKETLER
+                        // ---------------------------------
+
+                        const tagsBox =
+                            document.querySelector(
+                                "#visualTags"
+                            );
+
+
+                        if (
+                            Array.isArray(
+                                item.tags
+                            ) &&
+                            item.tags.length
+                        ) {
+
+                            tagsBox.innerHTML =
+                                item.tags
+                                    .map(
+                                        function (tag) {
+
+                                            return `
+                                                <span
+                                                    class="detail-tag"
+                                                >
+                                                    ${tag}
+                                                </span>
+                                            `;
+
+                                        }
+                                    )
+                                    .join("");
+
+                        } else {
+
+                            tagsBox.style.display =
+                                "none";
+
+                        }
+
+
+                        // ---------------------------------
+                        // İNDİR
+                        // ---------------------------------
+
+                        const download =
+                            document.querySelector(
+                                "#downloadButton"
+                            );
+
+
+                        download.href =
+                            "assets/previews/" +
+                            item.file;
+
+
+                        download.setAttribute(
+                            "download",
+                            item.file
+                        );
+
+
+                        // ---------------------------------
+                        // KATEGORİYE DÖN
+                        // ---------------------------------
+
+                        const categoryButton =
+                            document.querySelector(
+                                "#categoryButton"
+                            );
+
+
+                        categoryButton.href =
+                            "kategori.html?cat=" +
+                            encodeURIComponent(
+                                item.category || ""
+                            );
+
+
+                        // ---------------------------------
+                        // GÖSTER
+                        // ---------------------------------
+
+                        loading.style.display =
+                            "none";
+
+                        content.style.display =
+                            "block";
+
+                    })
+
+
+                    .catch(function (error) {
+
+                        console.error(error);
+
+                        loading.style.display =
+                            "none";
+
+                        notFound.style.display =
+                            "block";
+
+                    });
+
+            }
+        );
+
+    </script>
+
+</body>
+  </html>
