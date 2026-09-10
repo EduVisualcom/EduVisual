@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>EduVisual - Kategori</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container">
+
+      <a href="index.html" class="logo">
+        EduVisual
+      </a>
+
+      <a href="index.html" class="back-link">
+        ← Ana Sayfa
+      </a>
+
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="category-header">
+
+      <p class="eyebrow">
+        ÜCRETSİZ GÖRSELLER
+      </p>
+
+      <h1 id="categoryTitle">
+        Kategori
+      </h1>
+
+      <p id="categoryDescription">
+        Görseller yükleniyor...
+      </p>
+
+      <div class="category-count" id="count">
+        0 görsel
+      </div>
+
+    </section>
+
+    <section>
+
+      <div
+        id="grid"
+        class="grid"
+      ></div>
+
+      <div
+        id="empty"
+        style="display:none;"
+      >
+        Bu kategoride henüz görsel bulunmuyor.
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    const category =
+      params.get("cat") || "";
+
+    const title =
+      document.querySelector("#categoryTitle");
+
+    const description =
+      document.querySelector("#categoryDescription");
+
+    const grid =
+      document.querySelector("#grid");
+
+    const count =
+      document.querySelector("#count");
+
+    const empty =
+      document.querySelector("#empty");
+
+
+    title.textContent =
+      category || "Tüm Görseller";
+
+
+    description.textContent =
+      category
+        ? category + " kategorisindeki ücretsiz eğitim görselleri."
+        : "EduVisual ücretsiz görsel kütüphanesi.";
+
+
+    function createCard(item) {
+
+      return `
+        <article
+          class="card"
+          data-id="${item.id}"
+        >
+
+          <div class="thumb">
+
+            <img
+              src="assets/previews/${item.file}"
+              alt="${item.title || ""}"
+              loading="lazy"
+            >
+
+          </div>
+
+          <div class="info">
+
+            <span class="pill">
+              ${item.category || ""}
+            </span>
+
+            <h3>
+              ${item.title || ""}
+            </h3>
+
+            <p>
+              ${item.grade || ""} • ${item.type || ""}
+            </p>
+
+          </div>
+
+        </article>
+      `;
+
+    }
+
+
+    fetch("data.json")
+
+      .then(response => {
+
+        if (!response.ok) {
+          throw new Error(
+            "data.json yüklenemedi."
+          );
+        }
+
+        return response.json();
+
+      })
+
+      .then(items => {
+
+        const filtered =
+          items.filter(item =>
+            String(item.category || "")
+              .toLocaleLowerCase("tr-TR")
+            ===
+            category
+              .toLocaleLowerCase("tr-TR")
+          );
+
+
+        grid.innerHTML =
+          filtered.map(createCard).join("");
+
+
+        count.textContent =
+          filtered.length + " görsel";
+
+
+        if (filtered.length === 0) {
+          empty.style.display = "block";
+        }
+
+
+        grid.addEventListener(
+          "click",
+          event => {
+
+            const card =
+              event.target.closest(".card");
+
+            if (!card) return;
+
+            const id =
+              card.dataset.id;
+
+            window.location.href =
+              "gorsel-" + id + ".html";
+
+          }
+        );
+
+      })
+
+      .catch(error => {
+
+        console.error(error);
+
+        grid.innerHTML =
+          "<p>Görseller yüklenemedi.</p>";
+
+      });
+
+  </script>
+
+</body>
+</html>
