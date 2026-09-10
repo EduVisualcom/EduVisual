@@ -1,302 +1,294 @@
-let items = [];
+document.addEventListener("DOMContentLoaded", () => {
 
-const cats = [
-  ["Matematik", "∑", "Kesirler, geometri"],
-  ["Fen Bilimleri", "⚗", "Deney, bilim"],
-  ["Finans", "₺", "Bütçe, tasarruf"],
-  ["İnfografik", "◈", "Şema, veri, süreç"],
-  ["Etkinlik", "✦", "Çalışma ve oyun"],
-  ["Arka Plan", "▧", "Sayfa dekorları"]
-];
+  // =========================================================
+  // EDUVISUAL V1.1
+  // ANA UYGULAMA
+  // =========================================================
 
-const grid = document.querySelector("#grid");
-const count = document.querySelector("#count");
-const empty = document.querySelector("#empty");
+  let items = [];
+  let activeFilter = "";
 
-let activeFilter = "";
+  // =========================================================
+  // KATEGORİLER
+  // =========================================================
 
+  const categories = [
+    {
+      name: "Matematik",
+      icon: "∑",
+      desc: "Kesirler, geometri"
+    },
+    {
+      name: "Fen Bilimleri",
+      icon: "⚗",
+      desc: "Deney, bilim"
+    },
+    {
+      name: "Finans",
+      icon: "₺",
+      desc: "Bütçe, tasarruf"
+    },
+    {
+      name: "İnfografik",
+      icon: "◈",
+      desc: "Şema, veri, süreç"
+    },
+    {
+      name: "Etkinlik",
+      icon: "✦",
+      desc: "Çalışma ve oyun"
+    },
+    {
+      name: "Arka Plan",
+      icon: "▧",
+      desc: "Sayfa dekorları"
+    }
+  ];
 
-/* =========================================================
-   GÖRSEL KARTI
-   ========================================================= */
+  // =========================================================
+  // HTML ELEMANLARI
+  // =========================================================
 
-function card(x) {
-  return `
-    <article class="card" onclick="location.href='gorsel-${x.id}.html'">
+  const grid = document.querySelector("#grid");
+  const count = document.querySelector("#count");
+  const empty = document.querySelector("#empty");
+  const categoriesBox = document.querySelector("#cats");
+  const chipsBox = document.querySelector("#chips");
+  const searchInput = document.querySelector("#q");
+  const searchButton = document.querySelector("#go");
 
-      <div class="thumb">
-        <img
-          src="assets/previews/${x.file}"
-          alt="${x.title}"
-          loading="lazy"
-        >
-      </div>
+  // =========================================================
+  // KONTROL
+  // =========================================================
 
-      <div class="info">
+  if (!grid) {
+    console.error("EduVisual: #grid bulunamadı.");
+    return;
+  }
 
-        <span class="pill">
-          ${x.category || ""}
-        </span>
+  // =========================================================
+  // GÖRSEL KARTI
+  // =========================================================
 
-        <h3>
-          ${x.title || ""}
-        </h3>
+  function createCard(item) {
 
-        <p>
-          ${x.grade || ""} • ${x.type || ""}
-        </p>
+    const id = item.id || "";
+    const title = item.title || "İsimsiz görsel";
+    const category = item.category || "";
+    const grade = item.grade || "";
+    const type = item.type || "";
+    const file = item.file || "";
 
-      </div>
+    return `
+      <article
+        class="card"
+        data-id="${id}"
+        onclick="window.location.href='gorsel-${id}.html'"
+      >
 
-    </article>
-  `;
-}
+        <div class="thumb">
+          <img
+            src="assets/previews/${file}"
+            alt="${title}"
+            loading="lazy"
+            onerror="this.style.display='none';"
+          >
+        </div>
 
+        <div class="info">
 
-/* =========================================================
-   LİSTEYİ EKRANA BAS
-   ========================================================= */
+          <span class="pill">
+            ${category}
+          </span>
 
-function render(list) {
+          <h3>
+            ${title}
+          </h3>
 
-  grid.innerHTML = list.map(card).join("");
+          <p>
+            ${grade} • ${type}
+          </p>
 
-  count.textContent = list.length + " görsel";
+        </div>
 
-  empty.style.display = list.length ? "none" : "block";
-}
+      </article>
+    `;
+  }
 
+  // =========================================================
+  // LİSTEYİ EKRANA BAS
+  // =========================================================
 
-/* =========================================================
-   AKTİF KATEGORİYİ GÖSTER
-   ========================================================= */
+  function render(list) {
 
-function setActive(label) {
+    if (!Array.isArray(list)) {
+      list = [];
+    }
 
-  document
-    .querySelectorAll(".cat")
-    .forEach(button => {
+    grid.innerHTML = list.map(createCard).join("");
+
+    if (count) {
+      count.textContent = `${list.length} görsel`;
+    }
+
+    if (empty) {
+      empty.style.display = list.length ? "none" : "block";
+    }
+
+    console.log("EduVisual:", list.length, "görsel gösterildi.");
+  }
+
+  // =========================================================
+  // AKTİF KATEGORİ
+  // =========================================================
+
+  function setActiveCategory(label) {
+
+    document.querySelectorAll(".cat").forEach(button => {
+
+      const category =
+        button.dataset.category || "";
 
       button.classList.toggle(
         "active",
-        button.dataset.category === label
+        category.toLocaleLowerCase("tr-TR") ===
+        label.toLocaleLowerCase("tr-TR")
       );
 
     });
-}
-
-
-/* =========================================================
-   ARAMA + KATEGORİ FİLTRELEME
-   ========================================================= */
-
-function search(q) {
-
-  q = (q || "")
-    .trim()
-    .toLocaleLowerCase("tr-TR");
-
-  activeFilter = q;
-
-
-  /* ---------------------------------------------------------
-     ARAMA BOŞSA TÜM GÖRSELLERİ GÖSTER
-     --------------------------------------------------------- */
-
-  if (!q) {
-
-    setActive("");
-
-    render(items);
-
-    return;
   }
 
+  // =========================================================
+  // ARAMA
+  // =========================================================
 
-  /* ---------------------------------------------------------
-     YAZILAN ŞEY BİR KATEGORİ Mİ?
-     --------------------------------------------------------- */
+  function search(query) {
 
-  const category = cats.find(
-    c =>
-      c[0].toLocaleLowerCase("tr-TR") === q
-  );
+    const q = (query || "")
+      .trim()
+      .toLocaleLowerCase("tr-TR");
 
+    activeFilter = q;
 
-  /* ---------------------------------------------------------
-     EVET → SADECE O KATEGORİYİ GÖSTER
-     --------------------------------------------------------- */
+    if (!q) {
 
-  if (category) {
+      setActiveCategory("");
 
-    const categoryName = category[0];
+      render(items);
 
-    setActive(categoryName);
+      return;
+    }
 
-    const filtered = items.filter(x =>
+    const filtered = items.filter(item => {
 
-      (x.category || "")
-        .toLocaleLowerCase("tr-TR") === q
+      const text = [
 
-    );
+        item.title || "",
+        item.category || "",
+        item.subcategory || "",
+        Array.isArray(item.tags)
+          ? item.tags.join(" ")
+          : "",
+        item.grade || "",
+        item.type || "",
+        item.desc || ""
+
+      ]
+        .join(" ")
+        .toLocaleLowerCase("tr-TR");
+
+      return text.includes(q);
+
+    });
+
+    setActiveCategory(q);
 
     render(filtered);
 
-    scrollToGallery();
+    // Sonuç alanına kaydır
+    const target =
+      document.querySelector("#yeniler") ||
+      document.querySelector("#grid");
 
-    return;
+    if (target) {
+
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }
   }
 
+  // =========================================================
+  // KATEGORİ TIKLAMA
+  // =========================================================
 
-  /* ---------------------------------------------------------
-     NORMAL ARAMA
-     --------------------------------------------------------- */
+  function categoryClick(label) {
 
-  setActive("");
+    const normalized =
+      label.toLocaleLowerCase("tr-TR");
 
-  const filtered = items.filter(x => {
+    // Aynı kategoriye tekrar basılırsa filtreyi kaldır
+    const same =
+      activeFilter === normalized;
 
-    const searchableText = [
+    const query =
+      same ? "" : label;
 
-      x.title || "",
-      x.category || "",
-      x.subcategory || "",
-      Array.isArray(x.tags)
-        ? x.tags.join(" ")
-        : "",
-      x.grade || "",
-      x.type || "",
-      x.desc || ""
+    if (searchInput) {
+      searchInput.value = query;
+    }
 
-    ]
-      .join(" ")
-      .toLocaleLowerCase("tr-TR");
-
-    return searchableText.includes(q);
-
-  });
-
-  render(filtered);
-
-  scrollToGallery();
-}
-
-
-/* =========================================================
-   KATEGORİYE TIKLAMA
-   ========================================================= */
-
-function categoryClick(label) {
-
-  const normalized =
-    label.toLocaleLowerCase("tr-TR");
-
-
-  /* ---------------------------------------------------------
-     AYNI KATEGORİYE TEKRAR BASILIRSA
-     FİLTREYİ KALDIR
-     --------------------------------------------------------- */
-
-  if (activeFilter === normalized) {
-
-    clearFilter();
-
-    return;
+    search(query);
   }
 
+  // =========================================================
+  // TÜMÜNÜ GÖSTER
+  // =========================================================
 
-  /* ---------------------------------------------------------
-     ARAMA KUTUSUNA KATEGORİ ADINI YAZ
-     --------------------------------------------------------- */
+  function clearFilter() {
 
-  const input = document.querySelector("#q");
+    activeFilter = "";
 
-  if (input) {
-    input.value = label;
+    if (searchInput) {
+      searchInput.value = "";
+    }
+
+    setActiveCategory("");
+
+    render(items);
   }
 
+  // =========================================================
+  // KATEGORİLERİ OLUŞTUR
+  // =========================================================
 
-  /* ---------------------------------------------------------
-     KATEGORİ FİLTRESİNİ ÇALIŞTIR
-     --------------------------------------------------------- */
+  function renderCategories() {
 
-  search(label);
-}
+    if (!categoriesBox) {
+      console.warn("EduVisual: #cats bulunamadı.");
+      return;
+    }
 
-
-/* =========================================================
-   FİLTREYİ TEMİZLE
-   ========================================================= */
-
-function clearFilter() {
-
-  const input = document.querySelector("#q");
-
-  if (input) {
-    input.value = "";
-  }
-
-  activeFilter = "";
-
-  setActive("");
-
-  render(items);
-}
-
-
-/* =========================================================
-   GÖRSEL KOLEKSİYONUNA KAYDIR
-   ========================================================= */
-
-function scrollToGallery() {
-
-  const gallery =
-    document.querySelector("#yeniler");
-
-  if (!gallery) {
-    return;
-  }
-
-  setTimeout(() => {
-
-    gallery.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-
-  }, 50);
-}
-
-
-/* =========================================================
-   KATEGORİLERİ OLUŞTUR
-   ========================================================= */
-
-function buildCategories() {
-
-  const catsContainer =
-    document.querySelector("#cats");
-
-  if (catsContainer) {
-
-    catsContainer.innerHTML =
-      cats.map(c => {
+    categoriesBox.innerHTML =
+      categories.map(category => {
 
         return `
           <button
             class="cat"
-            data-category="${c[0]}"
-            onclick="categoryClick('${c[0]}')"
+            type="button"
+            data-category="${category.name}"
           >
 
-            <b>${c[1]}</b>
+            <b>${category.icon}</b>
 
             <strong>
-              ${c[0]}
+              ${category.name}
             </strong>
 
             <span>
-              ${c[2]}
+              ${category.desc}
             </span>
 
           </button>
@@ -304,133 +296,219 @@ function buildCategories() {
 
       }).join("");
 
+    // Eventleri sonradan bağlıyoruz
+    categoriesBox
+      .querySelectorAll(".cat")
+      .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+          categoryClick(
+            button.dataset.category
+          );
+
+        });
+
+      });
   }
 
+  // =========================================================
+  // ÜST ARAMA CHIP'LERİ
+  // =========================================================
 
-  /* ---------------------------------------------------------
-     ÜST ARAMA ÇİPLERİ
-     --------------------------------------------------------- */
+  function renderChips() {
 
-  const chips =
-    document.querySelector("#chips");
+    if (!chipsBox) {
+      return;
+    }
 
-  if (chips) {
+    const mainCategories =
+      categories.slice(0, 4);
 
-    chips.innerHTML =
+    chipsBox.innerHTML =
 
-      cats
-        .slice(0, 4)
-        .map(c => {
+      mainCategories.map(category => {
 
-          return `
-            <button
-              onclick="categoryClick('${c[0]}')"
-            >
-              ${c[0]}
-            </button>
-          `;
+        return `
+          <button
+            type="button"
+            class="chip"
+            data-chip="${category.name}"
+          >
+            ${category.name}
+          </button>
+        `;
 
-        })
-        .join("")
-
-      +
+      }).join("") +
 
       `
-        <button onclick="clearFilter()">
+        <button
+          type="button"
+          class="chip"
+          id="showAll"
+        >
           Tümünü göster
         </button>
       `;
 
+    chipsBox
+      .querySelectorAll("[data-chip]")
+      .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+          categoryClick(
+            button.dataset.chip
+          );
+
+        });
+
+      });
+
+    const showAll =
+      document.querySelector("#showAll");
+
+    if (showAll) {
+
+      showAll.addEventListener(
+        "click",
+        clearFilter
+      );
+
+    }
   }
-}
 
+  // =========================================================
+  // ARAMA BUTONU
+  // =========================================================
 
-/* =========================================================
-   VERİLERİ YÜKLE
-   ========================================================= */
+  if (searchButton && searchInput) {
 
-fetch("data.json")
+    searchButton.addEventListener(
+      "click",
+      () => {
 
-  .then(response => {
+        search(searchInput.value);
 
-    if (!response.ok) {
-      throw new Error(
-        "data.json yüklenemedi."
-      );
-    }
-
-    return response.json();
-
-  })
-
-  .then(data => {
-
-    items = Array.isArray(data)
-      ? data
-      : [];
-
-    render(items);
-
-    buildCategories();
-
-  })
-
-  .catch(error => {
-
-    console.error(
-      "EduVisual veri yükleme hatası:",
-      error
+      }
     );
 
-    items = [];
+    searchInput.addEventListener(
+      "keydown",
+      event => {
 
-    render(items);
+        if (event.key === "Enter") {
 
-  });
+          search(searchInput.value);
 
+        }
 
-/* =========================================================
-   ARAMA BUTONU
-   ========================================================= */
-
-const goButton =
-  document.querySelector("#go");
-
-if (goButton) {
-
-  goButton.onclick = () => {
-
-    const input =
-      document.querySelector("#q");
-
-    search(
-      input ? input.value : ""
+      }
     );
+  }
 
-  };
+  // =========================================================
+  // DATA.JSON YÜKLE
+  // =========================================================
 
-}
+  async function loadData() {
 
+    try {
 
-/* =========================================================
-   ENTER İLE ARAMA
-   ========================================================= */
-
-const searchInput =
-  document.querySelector("#q");
-
-if (searchInput) {
-
-  searchInput.onkeydown = event => {
-
-    if (event.key === "Enter") {
-
-      search(
-        event.target.value
+      console.log(
+        "EduVisual: data.json yükleniyor..."
       );
+
+      const response =
+        await fetch(
+          "./data.json?v=" +
+          Date.now(),
+          {
+            cache: "no-store"
+          }
+        );
+
+      if (!response.ok) {
+
+        throw new Error(
+          `data.json yüklenemedi. HTTP ${response.status}`
+        );
+
+      }
+
+      const data =
+        await response.json();
+
+      if (!Array.isArray(data)) {
+
+        throw new Error(
+          "data.json bir dizi (array) olmalı."
+        );
+
+      }
+
+      items = data;
+
+      console.log(
+        "EduVisual: data.json başarıyla okundu.",
+        items.length,
+        "görsel."
+      );
+
+      // Önce kategoriler
+      renderCategories();
+
+      // Sonra chipler
+      renderChips();
+
+      // Sonra tüm görseller
+      render(items);
+
+    } catch (error) {
+
+      console.error(
+        "EduVisual DATA HATASI:",
+        error
+      );
+
+      // Kullanıcıya boş ekran bırakmayalım
+      if (grid) {
+
+        grid.innerHTML = `
+          <div
+            style="
+              padding:30px;
+              text-align:center;
+              width:100%;
+            "
+          >
+
+            <h3>
+              Görseller yüklenemedi.
+            </h3>
+
+            <p>
+              Veri dosyası okunurken bir sorun oluştu.
+            </p>
+
+          </div>
+        `;
+
+      }
+
+      if (count) {
+        count.textContent =
+          "Veri yüklenemedi";
+      }
 
     }
 
-  };
+  }
 
-}
+  // =========================================================
+  // BAŞLAT
+  // =========================================================
+
+  loadData();
+
+});
