@@ -4,7 +4,12 @@
     "title": "Kesirler ve Bölme",
     "category": "Matematik",
     "subcategory": "Kesirler",
-    "tags": ["matematik", "7. sınıf", "kesir", "bölme"],
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "kesir",
+      "bölme"
+    ],
     "grade": "7. sınıf",
     "type": "SVG",
     "size": "300 × 205 px",
@@ -17,7 +22,13 @@
     "title": "Bütçe ve Tasarruf",
     "category": "Finans",
     "subcategory": "Bütçe",
-    "tags": ["finans", "7. sınıf", "bütçe", "tasarruf", "para"],
+    "tags": [
+      "finans",
+      "7. sınıf",
+      "bütçe",
+      "tasarruf",
+      "para"
+    ],
     "grade": "7. sınıf",
     "type": "SVG",
     "size": "300 × 205 px",
@@ -30,7 +41,12 @@
     "title": "Bilimsel Deney Süreci",
     "category": "Fen Bilimleri",
     "subcategory": "Deney",
-    "tags": ["fen", "deney", "bilim", "süreç"],
+    "tags": [
+      "fen",
+      "deney",
+      "bilim",
+      "süreç"
+    ],
     "grade": "7. sınıf",
     "type": "SVG",
     "size": "300 × 205 px",
@@ -43,7 +59,12 @@
     "title": "Para Yönetimi",
     "category": "İnfografik",
     "subcategory": "Finansal Okuryazarlık",
-    "tags": ["infografik", "finans", "para", "yönetim"],
+    "tags": [
+      "infografik",
+      "finans",
+      "para",
+      "yönetim"
+    ],
     "grade": "7. sınıf",
     "type": "SVG",
     "size": "300 × 205 px",
@@ -56,7 +77,12 @@
     "title": "Ders Notları Arka Planı",
     "category": "Arka Plan",
     "subcategory": "Sayfa Dekoru",
-    "tags": ["arka plan", "defter", "eğitim", "sayfa"],
+    "tags": [
+      "arka plan",
+      "defter",
+      "eğitim",
+      "sayfa"
+    ],
     "grade": "Ortaokul",
     "type": "SVG",
     "size": "300 × 205 px",
@@ -69,7 +95,12 @@
     "title": "Hedef ve Planlama",
     "category": "Etkinlik",
     "subcategory": "Kişisel Gelişim",
-    "tags": ["etkinlik", "hedef", "planlama", "öğrenci"],
+    "tags": [
+      "etkinlik",
+      "hedef",
+      "planlama",
+      "öğrenci"
+    ],
     "grade": "Ortaokul",
     "type": "SVG",
     "size": "300 × 205 px",
@@ -82,7 +113,12 @@
     "title": "Geometri Şekilleri",
     "category": "Matematik",
     "subcategory": "Geometri",
-    "tags": ["matematik", "7. sınıf", "geometri", "şekil"],
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "geometri",
+      "şekil"
+    ],
     "grade": "7. sınıf",
     "type": "SVG",
     "size": "300 × 205 px",
@@ -95,12 +131,302 @@
     "title": "Gelir ve Gider",
     "category": "Finans",
     "subcategory": "Bütçe",
-    "tags": ["finans", "gelir", "gider", "bütçe"],
+    "tags": [
+      "finans",
+      "gelir",
+      "gider",
+      "bütçe"
+    ],
     "grade": "7. sınıf",
     "type": "SVG",
     "size": "300 × 205 px",
     "desc": "Gelir ve gider kavramlarını karşılaştıran basit infografik.",
     "file": "gelir-ve-gider.svg",
     "style": "bars"
+  },
+  {
+    "id": "matematik-kesirler",
+    "title": "Kesirler",
+    "category": "Matematik",
+    "subcategory": "Kesirler",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "kesir",
+      "kesirler",
+      "pay",
+      "payda"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için kesirler konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-kesirler.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-yuzdeler",
+    "title": "Yüzdeler",
+    "category": "Matematik",
+    "subcategory": "Yüzdeler",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "yüzde",
+      "oran",
+      "hesaplama"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için yüzdeler konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-yuzdeler.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-geometri",
+    "title": "Geometri",
+    "category": "Matematik",
+    "subcategory": "Geometri",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "geometri",
+      "şekiller",
+      "üçgen",
+      "kare"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için geometri konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-geometri.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-acilar",
+    "title": "Açılar",
+    "category": "Matematik",
+    "subcategory": "Geometri",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "açı",
+      "derece",
+      "geometri"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için açılar konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-acilar.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-alan",
+    "title": "Alan",
+    "category": "Matematik",
+    "subcategory": "Geometri",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "alan",
+      "ölçme",
+      "geometri"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için alan konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-alan.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-hacim",
+    "title": "Hacim",
+    "category": "Matematik",
+    "subcategory": "Geometri",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "hacim",
+      "ölçme",
+      "geometri"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için hacim konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-hacim.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-oran-oranti",
+    "title": "Oran ve Orantı",
+    "category": "Matematik",
+    "subcategory": "Oran-Orantı",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "oran",
+      "orantı",
+      "karşılaştırma"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için oran ve orantı konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-oran-oranti.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-olasilik",
+    "title": "Olasılık",
+    "category": "Matematik",
+    "subcategory": "Olasılık",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "olasılık",
+      "veri",
+      "matematik"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için olasılık konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-olasilik.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-grafik",
+    "title": "Veri ve Grafik",
+    "category": "Matematik",
+    "subcategory": "Veri",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "veri",
+      "grafik",
+      "sütun grafiği"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için veri ve grafik konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-grafik.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-ondalik",
+    "title": "Ondalık Gösterim",
+    "category": "Matematik",
+    "subcategory": "Sayılar",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "ondalık",
+      "ondalık gösterim"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için ondalık gösterim konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-ondalik.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-tam-sayilar",
+    "title": "Tam Sayılar",
+    "category": "Matematik",
+    "subcategory": "Sayılar",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "tam sayılar",
+      "negatif",
+      "pozitif"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için tam sayılar konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-tam-sayilar.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-islem-onceligi",
+    "title": "İşlem Önceliği",
+    "category": "Matematik",
+    "subcategory": "İşlemler",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "işlem önceliği",
+      "işlemler"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için i̇şlem önceliği konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-islem-onceligi.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-cember",
+    "title": "Çember",
+    "category": "Matematik",
+    "subcategory": "Geometri",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "çember",
+      "yarıçap",
+      "geometri"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için çember konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-cember.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-oruntu",
+    "title": "Örüntüler",
+    "category": "Matematik",
+    "subcategory": "Örüntüler",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "örüntü",
+      "örüntüler",
+      "matematik"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için örüntüler konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-oruntu.svg",
+    "style": "math"
+  },
+  {
+    "id": "matematik-koordinat",
+    "title": "Koordinat Sistemi",
+    "category": "Matematik",
+    "subcategory": "Geometri",
+    "tags": [
+      "matematik",
+      "7. sınıf",
+      "koordinat",
+      "eksen",
+      "nokta"
+    ],
+    "grade": "7. sınıf",
+    "type": "SVG",
+    "size": "700 × 520 px",
+    "desc": "7. sınıf öğrencileri için koordinat sistemi konusunu destekleyen renkli eğitim görseli.",
+    "file": "matematik-koordinat.svg",
+    "style": "math"
   }
 ]
