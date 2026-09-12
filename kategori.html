@@ -6,7 +6,7 @@
 
   <title>EduVisual - Kategori</title>
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -157,13 +157,15 @@
       .then(items => {
 
         const filtered =
-          items.filter(item =>
-            String(item.category || "")
-              .toLocaleLowerCase("tr-TR")
-            ===
-            category
-              .toLocaleLowerCase("tr-TR")
-          );
+          category
+            ? items.filter(item =>
+                String(item.category || "")
+                  .toLocaleLowerCase("tr-TR")
+                ===
+                category
+                  .toLocaleLowerCase("tr-TR")
+              )
+            : items;
 
 
         grid.innerHTML =
