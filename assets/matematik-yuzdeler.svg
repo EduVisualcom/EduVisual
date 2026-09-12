@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="520" viewBox="0 0 700 520">
+<rect width="700" height="520" rx="28" fill="#F5F7FC"/>
+
+<rect x="105" y="105" width="490" height="300" rx="28" fill="#FFF"/>
+<circle cx="245" cy="255" r="80" fill="#D9F5E8"/>
+<circle cx="455" cy="255" r="80" fill="#FFE1B5"/>
+<path d="M210 300 L280 210" stroke="#202A44" stroke-width="18" stroke-linecap="round"/>
+<circle cx="220" cy="210" r="18" fill="#6877E8"/>
+<circle cx="270" cy="300" r="18" fill="#6877E8"/>
+<text x="350" y="165" text-anchor="middle" font-family="Arial" font-size="48" font-weight="700" fill="#202A44">25%</text>
+<text x="350" y="465" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700" fill="#202A44">YÜZDELER</text>
+</svg>

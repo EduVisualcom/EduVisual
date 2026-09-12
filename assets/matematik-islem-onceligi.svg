@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="520" viewBox="0 0 700 520">
+<rect width="700" height="520" rx="28" fill="#F5F7FC"/>
+
+<rect x="105" y="140" width="490" height="205" rx="25" fill="#FFF" stroke="#DCE2EB" stroke-width="5"/>
+<text x="350" y="270" text-anchor="middle" font-family="Arial" font-size="70" font-weight="700" fill="#202A44">3 + 4 × 2</text>
+<circle cx="510" cy="195" r="32" fill="#FFB84D"/>
+<text x="350" y="465" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700" fill="#202A44">İŞLEM ÖNCELİĞİ</text>
+</svg>

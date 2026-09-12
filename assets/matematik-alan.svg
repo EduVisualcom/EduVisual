@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="520" viewBox="0 0 700 520">
+<rect width="700" height="520" rx="28" fill="#F5F7FC"/>
+
+<rect x="165" y="125" width="370" height="275" rx="18" fill="#FFF" stroke="#202A44" stroke-width="8"/>
+<g stroke="#AAB4C8" stroke-width="3"><path d="M165 180H535M165 235H535M165 290H535M165 345H535"/>
+<path d="M240 125V400M315 125V400M390 125V400M465 125V400"/></g>
+<rect x="240" y="235" width="75" height="55" fill="#6877E8"/>
+<text x="350" y="465" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700" fill="#202A44">ALAN</text>
+</svg>

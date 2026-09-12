@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="520" viewBox="0 0 700 520">
+<rect width="700" height="520" rx="28" fill="#F5F7FC"/>
+
+<line x1="120" y1="270" x2="580" y2="270" stroke="#202A44" stroke-width="8"/>
+<g stroke="#202A44" stroke-width="6"><path d="M160 255V285M225 255V285M290 255V285M350 245V295M410 255V285M475 255V285M540 255V285"/></g>
+<circle cx="225" cy="270" r="19" fill="#FFB84D"/>
+<circle cx="410" cy="270" r="19" fill="#6877E8"/>
+<text x="350" y="180" text-anchor="middle" font-family="Arial" font-size="58" font-weight="700" fill="#202A44">−   0   +</text>
+<text x="350" y="465" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700" fill="#202A44">TAM SAYILAR</text>
+</svg>
